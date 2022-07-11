@@ -6,7 +6,7 @@ import SearchSummoner from "../components/SearchSummoner.tsx";
 export default function Home() {
   return (
     <div class={tw`p-8 mx-auto max-w-screen-md space-y-6`}>
-      <p class={tw`text-2xl font-bold`}>Search by summoner name (NA only!)</p>
+      <p class={tw`text-2xl font-bold`}>Search by summoner name.</p>
       <p class={tw`italic`}>“Imagine if I had a real weapon!”</p>
       <SearchSummoner />
     </div>
