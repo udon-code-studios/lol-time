@@ -1,4 +1,6 @@
-# fresh project
+# LoL Time
+
+A League of Legends stat site which visualizes time spent in-game over the past week.
 
 ### Usage
 
