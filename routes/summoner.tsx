@@ -2,51 +2,37 @@
 import { h } from "preact";
 import { Handlers, PageProps } from "$fresh/server.ts";
 import { tw } from "@twind";
-import * as riot from "../utils/riot-api-types.d.ts";
+import * as riot from "riot";
 
 interface Data {
-  query: string;
-  summoner: riot.SummonerDTO | null;
-  leagueEntry: riot.LeagueEntryDTO | null;
-  matches: string[];
+  query?: string;
+  summoner?: riot.SummonerDTO;
+  leagueEntry?: riot.LeagueEntryDTO[];
+  matches?: string[];
 }
 
 export const handler: Handlers<Data> = {
   async GET(req, ctx) {
     const url = new URL(req.url);
     const query = url.searchParams.get("name") || "";
-    let summoner: riot.SummonerDTO | null = null;
-    let leagueEntry: riot.LeagueEntryDTO | null = null;
-    let matches: string[] = [];
 
     // get SummonerDTO from Riot API
-    let resp = await fetch(`https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${query}`, {
-      headers: { "X-Riot-Token": Deno.env.get("RIOT_API_KEY") || "" },
-    });
-    if (resp.status !== 200) {
-      return ctx.render({ query, summoner, leagueEntry, matches });
+    const summoner = await riot.summoner.byName(query, { region: riot.routes.Platform.NA1 });
+    if (summoner.status !== 200 || !summoner.summoner) {
+      return ctx.render({ query: query });
     }
-    summoner = await resp.json();
 
     // get LeagueEntryDTO from Riot API
-    resp = await fetch(`https://na1.api.riotgames.com/lol/league/v4/entries/by-summoner/${summoner?.id}`, {
-      headers: { "X-Riot-Token": Deno.env.get("RIOT_API_KEY") || "" },
-    });
-    leagueEntry = await resp.json();
+    const leagueEntry = await riot.league.bySummonerId(summoner.summoner.id, { region: riot.routes.Platform.NA1 });
+    if (leagueEntry.status !== 200 || !leagueEntry.leagueEntry) {
+      return ctx.render({ query: query, summoner: summoner.summoner });
+    }
 
     // get UNIX time in seconds 7 days ago
-    const start = Math.floor(new Date(Date.now() - 7 * (1000 * 60 * 60 * 24)).getTime() / 1000);
+    // const start = Math.floor(new Date(Date.now() - 7 * (1000 * 60 * 60 * 24)).getTime() / 1000);
+    // `https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/${summoner?.puuid}/ids?startTime=${start}&count=100`
 
-    // get Matches from Riot API
-    resp = await fetch(
-      `https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/${summoner?.puuid}/ids?startTime=${start}&count=100`,
-      {
-        headers: { "X-Riot-Token": Deno.env.get("RIOT_API_KEY") || "" },
-      }
-    );
-    matches = await resp.json();
-
-    return ctx.render({ query, summoner, leagueEntry, matches });
+    return ctx.render({ query, summoner: summoner.summoner, leagueEntry: leagueEntry.leagueEntry, matches: [] });
   },
 };
 
