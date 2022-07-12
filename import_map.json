@@ -8,6 +8,8 @@
     "twind": "https://esm.sh/twind@0.16.17",
     "twind/": "https://esm.sh/twind@0.16.17/",
     "riot": "https://deno.land/x/riot_api@v0.0.6-alpha/mod.ts",
-    "riot/": "https://deno.land/x/riot_api@v0.0.6-alpha/"
+    "riot/": "https://deno.land/x/riot_api@v0.0.6-alpha/",
+    "league": "https://deno.land/x/league_data@v0.0.2-alpha/mod.ts",
+    "league/": "https://deno.land/x/league_data@v0.0.2-alpha/"
   }
 }
