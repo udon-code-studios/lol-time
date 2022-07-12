@@ -4,6 +4,7 @@ import { Handlers, PageProps } from "$fresh/server.ts";
 import { tw } from "@twind";
 import * as riot from "riot";
 import * as assets from "league/assets/mod.ts";
+import { capitalize } from "../utils/funcs.ts";
 
 interface Data {
   query?: string;
@@ -51,38 +52,82 @@ export const handler: Handlers<Data> = {
 
 export default function SummonerProfile({ data }: PageProps<Data>) {
   const { query, summoner, leagueEntry, matches } = data;
+
+  /** Ranked Solo/Duo 5v5 LeagueEntryDTO */
   const rankedSolo5v5LeagueEntry = leagueEntry?.find((entry) =>
     entry.queueType === "RANKED_SOLO_5x5"
   );
+  /** e.g. GOLD */
   const rankedSolo5v5Tier = rankedSolo5v5LeagueEntry &&
     rankedSolo5v5LeagueEntry.tier as keyof typeof assets.tiers.OldEmblems;
+  /** e.g. III */
+  const rankedSolo5v5Division = rankedSolo5v5LeagueEntry &&
+    rankedSolo5v5LeagueEntry.rank;
+  /** e.g. Platinum IV */
+  const rankedSolo5v5Rank = rankedSolo5v5Tier
+    ? `${capitalize(rankedSolo5v5Tier)} ${rankedSolo5v5Division}`
+    : "";
 
-  return (
-    <div class={tw`p-8 mx-auto max-w-screen-md space-y-2`}>
-      <p class={tw`text-2xl font-bold`}>Summoner Profile</p>
+  // Render seperate page depending on if a summoner was found.
+  if (summoner) {
+    return (
+      // Summoner Profile page
+      <div class={tw`p-8 mx-auto max-w-screen-md space-y-2`}>
+        <p class={tw`text-2xl font-bold`}>Summoner Profile</p>
 
-      <a href="/" class={tw`block`}>
-        <button class={tw`border-2 p-1`}>Go home.</button>
-      </a>
+        <a href="/" class={tw`block`}>
+          <button class={tw`border-2 p-1`}>Go home.</button>
+        </a>
 
-      {/* Ranked Solo/Duo 5x5 Rank Emblem */}
-      {rankedSolo5v5Tier
-        ? <img src={assets.tiers.OldEmblems[rankedSolo5v5Tier]} />
-        : <img src={assets.tiers.OldEmblems.UNRANKED} />}
+        {/* Ranked Solo/Duo 5x5 Rank Emblem */}
+        {rankedSolo5v5Tier
+          ? <img src={assets.tiers.OldEmblems[rankedSolo5v5Tier]} />
+          : <img src={assets.tiers.OldEmblems.UNRANKED} />}
 
-      <p>
-        <strong>query:</strong>
-        <code class={tw`italic`}>{" "}{query}</code>
-      </p>
+        <p>
+          <strong>Summoner Name:</strong>
+          <code class={tw`italic`}>{" "}{summoner.name}</code>
+        </p>
 
-      <p class={tw`font-bold`}>SummonerDTO:</p>
-      <pre>{JSON.stringify(summoner, null, 2)}</pre>
+        <p>
+          <strong>Ranked Solo/Duo 5v5:</strong>
+          <code class={tw`italic`}>{" "}{rankedSolo5v5Rank}</code>
+        </p>
 
-      <p class={tw`font-bold`}>LeagueEntryDTO:</p>
-      <pre>{JSON.stringify(leagueEntry, null, 2)}</pre>
+        <p>
+          <strong>query:</strong>
+          <code class={tw`italic`}>{" "}{query}</code>
+        </p>
 
-      <p class={tw`font-bold`}>Last week of matches:</p>
-      <pre>{JSON.stringify(matches, null, 2)}</pre>
-    </div>
-  );
+        <p class={tw`font-bold`}>SummonerDTO:</p>
+        <pre>{JSON.stringify(summoner, null, 2)}</pre>
+
+        <p class={tw`font-bold`}>LeagueEntryDTO:</p>
+        <pre>{JSON.stringify(leagueEntry, null, 2)}</pre>
+
+        <p class={tw`font-bold`}>Last week of matches:</p>
+        <pre>{JSON.stringify(matches, null, 2)}</pre>
+      </div>
+    );
+  } else {
+    return (
+      // Summoner Not Found page
+      <div class={tw`p-8 mx-auto max-w-screen-md space-y-2`}>
+        <p class={tw`text-2xl font-bold`}>Summoner Profile</p>
+
+        <a href="/" class={tw`block`}>
+          <button class={tw`border-2 p-1`}>Go home.</button>
+        </a>
+
+        <p>
+          <strong>Summoner Not Found!</strong>
+        </p>
+
+        <p>
+          <strong>query:</strong>
+          <code class={tw`italic`}>{" "}{query}</code>
+        </p>
+      </div>
+    );
+  }
 }
