@@ -69,7 +69,7 @@ export default function SummonerProfile({ data }: PageProps<Data>) {
   return (
     <div class={tw`min-h-screen min-w-screen dark:bg-black dark:text-gray-100`}>
       <div
-        class={tw`min-h-screen flex flex-col justify-between items-center p-8 mx-auto max-w-screen-md gap-6`}
+        class={tw`min-h-screen flex flex-col justify-between items-center p-8 mx-auto max-w-screen-md gap-14`}
       >
         <div class={tw`w-full flex flex-col gap-10`}>
           <Header />
