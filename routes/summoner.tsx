@@ -3,6 +3,7 @@ import { h } from "preact";
 import { Handlers, PageProps } from "$fresh/server.ts";
 import { tw } from "@twind";
 import * as riot from "riot";
+import * as assets from "league/assets/mod.ts";
 
 interface Data {
   query?: string;
@@ -50,6 +51,12 @@ export const handler: Handlers<Data> = {
 
 export default function SummonerProfile({ data }: PageProps<Data>) {
   const { query, summoner, leagueEntry, matches } = data;
+  const rankedSolo5v5LeagueEntry = leagueEntry?.find((entry) =>
+    entry.queueType === "RANKED_SOLO_5x5"
+  );
+  const rankedSolo5v5Tier = rankedSolo5v5LeagueEntry &&
+    rankedSolo5v5LeagueEntry.tier as keyof typeof assets.tiers.OldEmblems;
+
   return (
     <div class={tw`p-8 mx-auto max-w-screen-md space-y-2`}>
       <p class={tw`text-2xl font-bold`}>Summoner Profile</p>
@@ -57,6 +64,11 @@ export default function SummonerProfile({ data }: PageProps<Data>) {
       <a href="/" class={tw`block`}>
         <button class={tw`border-2 p-1`}>Go home.</button>
       </a>
+
+      {/* Ranked Solo/Duo 5x5 Rank Emblem */}
+      {rankedSolo5v5Tier
+        ? <img src={assets.tiers.OldEmblems[rankedSolo5v5Tier]} />
+        : <img src={assets.tiers.OldEmblems.UNRANKED} />}
 
       <p>
         <strong>query:</strong>
