@@ -16,9 +16,9 @@ export default function Footer() {
         </a>
 
         <div class={tw`flex gap-4 pr-4`}>
-          <a href="https://github.com/udon-code-studios/lol-time" class={tw`hover:underline`}>GitHub</a>
-          <a href="https://github.com/udon-code-studios/lol-time" class={tw`hover:underline`}>Email</a>
-          <a href="https://github.com/udon-code-studios/lol-time" class={tw`hover:underline`}>Twitter</a>
+          <a href="https://github.com/udon-code-studios/lol-time" target="_blank" class={tw`hover:underline`}>GitHub</a>
+          <a href="mailto:leo.battalora@gmail.com" target="_blank" class={tw`hover:underline`}>Email</a>
+          <a href="https://twitter.com/subpar_program" target="_blank" class={tw`hover:underline`}>Twitter</a>
         </div>
       </div>
       <div class={tw`w-full border-1 border-current`} />
