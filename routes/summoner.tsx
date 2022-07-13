@@ -7,6 +7,7 @@ import * as assets from "league/assets/mod.ts";
 import { capitalize } from "../utils/funcs.ts";
 import Header from "../components/Header.tsx";
 import Footer from "../components/Footer.tsx";
+import Profile from "../components/Profile.tsx";
 
 interface Data {
   query?: string;
@@ -43,11 +44,19 @@ export const handler: Handlers<Data> = {
     // const start = Math.floor(new Date(Date.now() - 7 * (1000 * 60 * 60 * 24)).getTime() / 1000);
     // `https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/${summoner?.puuid}/ids?startTime=${start}&count=100`
 
+    const matches = await riot.match.byPuuid(summoner.summoner.puuid, {
+      region: riot.routes.PlatformToRegional(riot.routes.Platform[region]),
+    });
+    console.log(matches);
+    if (matches.status !== 200 || !matches.matches) {
+      return ctx.render({ query: query, summoner: summoner.summoner, leagueEntry: leagueEntry.leagueEntry });
+    }
+
     return ctx.render({
       query,
       summoner: summoner.summoner,
       leagueEntry: leagueEntry.leagueEntry,
-      matches: [],
+      matches: matches.matches,
     });
   },
 };
@@ -71,36 +80,12 @@ export default function SummonerProfile({ data }: PageProps<Data>) {
       <div
         class={tw`min-h-screen flex flex-col justify-between items-center p-8 mx-auto max-w-screen-md gap-14`}
       >
-        <div class={tw`w-full flex flex-col gap-10`}>
+        <div class={tw`w-full flex flex-col gap-8`}>
           <Header />
+          {summoner && leagueEntry && <Profile summoner={summoner} leagueEntry={leagueEntry} />}
+          <div class={tw`border-t-1 w-3/4 mx-auto border-current`} />
           <div>
-            {/* Ranked Solo/Duo 5x5 Rank Emblem */}
-            {rankedSolo5v5Tier
-              ? <img src={assets.tiers.OldEmblems[rankedSolo5v5Tier]} class={tw`w-32`} />
-              : <img src={assets.tiers.OldEmblems.UNRANKED} class={tw`w-32`} />}
-
-            <p>
-              <strong>Summoner Name:</strong>
-              <code class={tw`italic`}>{" "}{summoner?.name}</code>
-            </p>
-
-            <p>
-              <strong>Ranked Solo/Duo 5v5:</strong>
-              <code class={tw`italic`}>{" "}{rankedSolo5v5Rank}</code>
-            </p>
-
-            <p>
-              <strong>query:</strong>
-              <code class={tw`italic`}>{" "}{query}</code>
-            </p>
-
-            <p class={tw`font-bold`}>SummonerDTO:</p>
-            <pre>{JSON.stringify(summoner, null, 2)}</pre>
-
-            <p class={tw`font-bold`}>LeagueEntryDTO:</p>
-            <pre>{JSON.stringify(leagueEntry, null, 2)}</pre>
-
-            <p class={tw`font-bold`}>Last week of matches:</p>
+            <p class={tw`font-bold`}>Last 20 matches:</p>
             <pre>{JSON.stringify(matches, null, 2)}</pre>
           </div>
         </div>
