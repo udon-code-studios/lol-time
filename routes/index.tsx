@@ -2,7 +2,7 @@
 import { h } from "preact";
 import { tw } from "@twind";
 import Footer from "../components/Footer.tsx";
-import SearchSummoner from "../components/SearchSummoner.tsx";
+import Search from "../components/Search.tsx";
 import LightDarkToggleText from "../islands/LightDarkToggleText.tsx";
 
 export default function Home() {
@@ -13,7 +13,7 @@ export default function Home() {
       >
         <div class={tw`py-[20%] flex flex-col gap-2`}>
           <p class={tw`font-serif font-semibold text-5xl`}>LoL Time</p>
-          <SearchSummoner />
+          <Search />
           <LightDarkToggleText class={tw`pt-2 text-sm hover:underline`} />
         </div>
 
