@@ -8,21 +8,21 @@ import { capitalize } from "../utils/funcs.ts";
 import Header from "../components/Header.tsx";
 import Footer from "../components/Footer.tsx";
 import Profile from "../components/Profile.tsx";
+import Match from "../islands/Match.tsx";
 
 interface Data {
   query?: string;
+  region?: keyof typeof riot.routes.Platform;
   summoner?: riot.SummonerDTO;
   leagueEntry?: riot.LeagueEntryDTO[];
-  matches?: string[];
+  matchIds?: string[];
 }
 
 export const handler: Handlers<Data> = {
   async GET(req, ctx) {
     const url = new URL(req.url);
     const query = url.searchParams.get("name") || "";
-    const region = url.searchParams.get(
-      "region",
-    ) as keyof typeof riot.routes.Platform || "NA1";
+    const region = url.searchParams.get("region") as keyof typeof riot.routes.Platform || "NA1";
 
     // get SummonerDTO from Riot API
     const summoner = await riot.summoner.byName(query, {
@@ -44,36 +44,35 @@ export const handler: Handlers<Data> = {
     // const start = Math.floor(new Date(Date.now() - 7 * (1000 * 60 * 60 * 24)).getTime() / 1000);
     // `https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/${summoner?.puuid}/ids?startTime=${start}&count=100`
 
-    const matches = await riot.match.byPuuid(summoner.summoner.puuid, {
+    const matchIds = await riot.match.byPuuid(summoner.summoner.puuid, {
       region: riot.routes.PlatformToRegional(riot.routes.Platform[region]),
     });
-    console.log(matches);
-    if (matches.status !== 200 || !matches.matches) {
+    if (matchIds.status !== 200 || !matchIds.matches) {
       return ctx.render({ query: query, summoner: summoner.summoner, leagueEntry: leagueEntry.leagueEntry });
     }
 
+    // const matches: riot.MatchDTO[] = [];
+    // for (let i = 0; i < matchIds.matches.length; i++) {
+    //   const match = await riot.match.match(matchIds.matches[i], {
+    //     region: riot.routes.PlatformToRegional(riot.routes.Platform[region]),
+    //   });
+    //   if (matchIds.status === 200 && match.match) {
+    //     matches.push(match.match);
+    //   }
+    // }
+
     return ctx.render({
       query,
+      region,
       summoner: summoner.summoner,
       leagueEntry: leagueEntry.leagueEntry,
-      matches: matches.matches,
+      matchIds: matchIds.matches,
     });
   },
 };
 
 export default function SummonerProfile({ data }: PageProps<Data>) {
-  const { query, summoner, leagueEntry, matches } = data;
-
-  /** Ranked Solo/Duo 5v5 LeagueEntryDTO */
-  const rankedSolo5v5LeagueEntry = leagueEntry?.find((entry) => entry.queueType === "RANKED_SOLO_5x5");
-  /** e.g. GOLD */
-  const rankedSolo5v5Tier = rankedSolo5v5LeagueEntry &&
-    rankedSolo5v5LeagueEntry.tier as keyof typeof assets.tiers.OldEmblems;
-  /** e.g. III */
-  const rankedSolo5v5Division = rankedSolo5v5LeagueEntry &&
-    rankedSolo5v5LeagueEntry.rank;
-  /** e.g. Platinum IV */
-  const rankedSolo5v5Rank = rankedSolo5v5Tier ? `${capitalize(rankedSolo5v5Tier)} ${rankedSolo5v5Division}` : "";
+  const { query, region, summoner, leagueEntry, matchIds } = data;
 
   return (
     <div class={tw`min-h-screen min-w-screen dark:bg-black dark:text-gray-100`}>
@@ -86,7 +85,9 @@ export default function SummonerProfile({ data }: PageProps<Data>) {
           <div class={tw`border-t-1 w-3/4 mx-auto border-current`} />
           <div>
             <p class={tw`font-bold`}>Last 20 matches:</p>
-            <pre>{JSON.stringify(matches, null, 2)}</pre>
+            {region && matchIds?.map((id) => {
+              return <Match matchId={id} region={region} />;
+            })}
           </div>
         </div>
 
