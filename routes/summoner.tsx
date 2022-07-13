@@ -46,20 +46,11 @@ export const handler: Handlers<Data> = {
 
     const matchIds = await riot.match.byPuuid(summoner.summoner.puuid, {
       region: riot.routes.PlatformToRegional(riot.routes.Platform[region]),
+      count: 10,
     });
     if (matchIds.status !== 200 || !matchIds.matches) {
       return ctx.render({ query: query, summoner: summoner.summoner, leagueEntry: leagueEntry.leagueEntry });
     }
-
-    // const matches: riot.MatchDTO[] = [];
-    // for (let i = 0; i < matchIds.matches.length; i++) {
-    //   const match = await riot.match.match(matchIds.matches[i], {
-    //     region: riot.routes.PlatformToRegional(riot.routes.Platform[region]),
-    //   });
-    //   if (matchIds.status === 200 && match.match) {
-    //     matches.push(match.match);
-    //   }
-    // }
 
     return ctx.render({
       query,
@@ -84,7 +75,7 @@ export default function SummonerProfile({ data }: PageProps<Data>) {
           {summoner && leagueEntry && <Profile summoner={summoner} leagueEntry={leagueEntry} />}
           <div class={tw`border-t-1 w-3/4 mx-auto border-current`} />
           <div>
-            <p class={tw`font-bold`}>Last 20 matches:</p>
+            <p class={tw`font-bold`}>Last 10 matches:</p>
             {region && matchIds?.map((id) => {
               return <Match matchId={id} region={region} />;
             })}
