@@ -7,8 +7,8 @@
     "@twind": "./utils/twind.ts",
     "twind": "https://esm.sh/twind@0.16.17",
     "twind/": "https://esm.sh/twind@0.16.17/",
-    "riot": "https://deno.land/x/riot_api@v0.0.8-alpha/mod.ts",
-    "riot/": "https://deno.land/x/riot_api@v0.0.8-alpha/",
+    "riot": "https://deno.land/x/riot_api@v0.0.9-alpha/mod.ts",
+    "riot/": "https://deno.land/x/riot_api@v0.0.9-alpha/",
     "league": "https://deno.land/x/league_data@v0.1.0/mod.ts",
     "league/": "https://deno.land/x/league_data@v0.1.0/"
   }
