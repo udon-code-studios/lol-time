@@ -10,8 +10,8 @@ export default function Footer() {
       <div class={tw`w-full flex justify-between items-end gap-8`}>
         <a href="https://udon.studio" target="_blank">
           <div>
-            <icons.UdonLogoBgBlack class={tw`w-16 sm:w-24 dark:w-0`} />
-            <icons.UdonLogoBgWhite class={tw`w-0 dark:w-24 sm:dark:w-16`} />
+            <icons.UdonLogoBgBlack class={tw`w-16 sm:w-20 dark:w-0`} />
+            <icons.UdonLogoBgWhite class={tw`w-0 dark:w-16 sm:dark:w-20`} />
           </div>
         </a>
 
