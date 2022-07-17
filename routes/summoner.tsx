@@ -4,18 +4,16 @@ import { Handlers, PageProps } from "$fresh/server.ts";
 import { tw } from "@twind";
 import * as riot from "riot";
 import * as assets from "league/assets/mod.ts";
-import { capitalize } from "../utils/funcs.ts";
 import Header from "../components/Header.tsx";
 import Footer from "../components/Footer.tsx";
 import Profile from "../components/Profile.tsx";
-import Match from "../islands/Match.tsx";
+import Matches from "../islands/Matches.tsx";
 
 interface Data {
   query?: string;
   region?: keyof typeof riot.routes.Platform;
   summoner?: riot.SummonerDTO;
   leagueEntry?: riot.LeagueEntryDTO[];
-  matchIds?: string[];
 }
 
 export const handler: Handlers<Data> = {
@@ -44,26 +42,17 @@ export const handler: Handlers<Data> = {
     // const start = Math.floor(new Date(Date.now() - 7 * (1000 * 60 * 60 * 24)).getTime() / 1000);
     // `https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/${summoner?.puuid}/ids?startTime=${start}&count=100`
 
-    const matchIds = await riot.match.byPuuid(summoner.summoner.puuid, {
-      region: riot.routes.PlatformToRegional(riot.routes.Platform[region]),
-      count: 10,
-    });
-    if (matchIds.status !== 200 || !matchIds.matches) {
-      return ctx.render({ query: query, summoner: summoner.summoner, leagueEntry: leagueEntry.leagueEntry });
-    }
-
     return ctx.render({
       query,
       region,
       summoner: summoner.summoner,
       leagueEntry: leagueEntry.leagueEntry,
-      matchIds: matchIds.matches,
     });
   },
 };
 
 export default function SummonerProfile({ data }: PageProps<Data>) {
-  const { query, region, summoner, leagueEntry, matchIds } = data;
+  const { query, region, summoner, leagueEntry } = data;
 
   return (
     <div class={tw`min-h-screen min-w-screen dark:bg-black dark:text-gray-100`}>
@@ -74,14 +63,8 @@ export default function SummonerProfile({ data }: PageProps<Data>) {
           <Header />
           {summoner && leagueEntry && <Profile summoner={summoner} leagueEntry={leagueEntry} />}
           <div class={tw`border-t-1 w-3/4 mx-auto border-current`} />
-          <div>
-            <p class={tw`font-bold`}>Last 10 matches:</p>
-            {region && matchIds?.map((id) => {
-              return <Match matchId={id} region={region} />;
-            })}
-          </div>
+          {region && summoner?.puuid && <Matches puuid={summoner.puuid} region={region} />}
         </div>
-
         <Footer />
       </div>
     </div>

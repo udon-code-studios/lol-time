@@ -6,11 +6,13 @@ import * as $0 from "./routes/_404.tsx";
 import * as $1 from "./routes/_500.tsx";
 import * as $2 from "./routes/api/joke.ts";
 import * as $3 from "./routes/api/match.ts";
-import * as $4 from "./routes/index.tsx";
-import * as $5 from "./routes/summoner.tsx";
+import * as $4 from "./routes/api/matches.ts";
+import * as $5 from "./routes/index.tsx";
+import * as $6 from "./routes/summoner.tsx";
 import * as $$0 from "./islands/LightDarkToggleIcon.tsx";
 import * as $$1 from "./islands/LightDarkToggleText.tsx";
 import * as $$2 from "./islands/Match.tsx";
+import * as $$3 from "./islands/Matches.tsx";
 
 const manifest = {
   routes: {
@@ -18,13 +20,15 @@ const manifest = {
     "./routes/_500.tsx": $1,
     "./routes/api/joke.ts": $2,
     "./routes/api/match.ts": $3,
-    "./routes/index.tsx": $4,
-    "./routes/summoner.tsx": $5,
+    "./routes/api/matches.ts": $4,
+    "./routes/index.tsx": $5,
+    "./routes/summoner.tsx": $6,
   },
   islands: {
     "./islands/LightDarkToggleIcon.tsx": $$0,
     "./islands/LightDarkToggleText.tsx": $$1,
     "./islands/Match.tsx": $$2,
+    "./islands/Matches.tsx": $$3,
   },
   baseUrl: import.meta.url,
 };
