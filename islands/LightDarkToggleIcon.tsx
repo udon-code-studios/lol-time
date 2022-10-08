@@ -1,7 +1,4 @@
-/** @jsx h */
-import { h } from "preact";
 import { useEffect, useState } from "preact/hooks";
-import { tw } from "@twind";
 import * as icons from "../components/icons.tsx";
 
 export default function LightDarkToggle() {
@@ -25,7 +22,7 @@ export default function LightDarkToggle() {
   return (
     <button
       title={darkMode ? "toggle light mode" : "toggle dark mode"}
-      class={tw`focus:outline-none`}
+      class="focus:outline-none"
       onClick={() => {
         if (document.documentElement.classList.contains("dark")) {
           document.documentElement.classList.remove("dark");
@@ -38,7 +35,7 @@ export default function LightDarkToggle() {
         }
       }}
     >
-      {darkMode ? <icons.PhMoonBold class={tw`w-6`} /> : <icons.PhSunBold class={tw`w-6`} />}
+      {darkMode ? <icons.PhMoonBold class="w-6" /> : <icons.PhSunBold class="w-6" />}
     </button>
   );
 }

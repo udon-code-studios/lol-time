@@ -1,6 +1,3 @@
-/** @jsx h */
-import { h } from "preact";
-
 // props interface to pass class to SVGs
 interface IconProps {
   class?: string;

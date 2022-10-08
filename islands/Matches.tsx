@@ -1,7 +1,4 @@
-/** @jsx h */
-import { h } from "preact";
 import { useEffect, useState } from "preact/hooks";
-import { tw } from "@twind";
 import * as riot from "riot";
 import Match from "../islands/Match.tsx";
 
@@ -23,17 +20,17 @@ export default function Matches(props: { puuid: string; region: keyof typeof rio
   }, [props]);
 
   if (loadingState === "loading") {
-    return <div class={tw`w-full flex flex-col justify-center gap-4 text-center`}>loading matches...</div>;
+    return <div class="w-full flex flex-col justify-center gap-4 text-center">loading matches...</div>;
   }
 
   if (loadingState === "failed") {
     return (
-      <div class={tw`w-full flex flex-col justify-center gap-4 text-center`}>[ ERROR ] Failed to load matches.</div>
+      <div class="w-full flex flex-col justify-center gap-4 text-center">[ ERROR ] Failed to load matches.</div>
     );
   }
 
   return (
-    <div class={tw`w-full flex flex-col justify-center gap-4`}>
+    <div class="w-full flex flex-col justify-center gap-4">
       {matchIds?.matches?.map((id) => {
         return <Match puuid={props.puuid} matchId={id} region={props.region} />;
       })}

@@ -1,7 +1,4 @@
-/** @jsx h */
-import { h } from "preact";
 import { Handlers, PageProps } from "$fresh/server.ts";
-import { tw } from "@twind";
 import * as riot from "riot";
 import * as assets from "league/assets/mod.ts";
 import Header from "../components/Header.tsx";
@@ -55,14 +52,14 @@ export default function SummonerProfile({ data }: PageProps<Data>) {
   const { query, region, summoner, leagueEntry } = data;
 
   return (
-    <div class={tw`min-h-screen min-w-screen dark:bg-black dark:text-gray-100`}>
+    <div class="min-h-screen min-w-screen dark:bg-black dark:text-gray-100">
       <div
-        class={tw`min-h-screen flex flex-col justify-between items-center p-8 mx-auto max-w-screen-md gap-14`}
+        class="min-h-screen flex flex-col justify-between items-center p-8 mx-auto max-w-screen-md gap-14"
       >
-        <div class={tw`w-full flex flex-col gap-8`}>
+        <div class="w-full flex flex-col gap-8">
           <Header />
           {summoner && leagueEntry && <Profile summoner={summoner} leagueEntry={leagueEntry} />}
-          <div class={tw`border-t-1 w-3/4 mx-auto border-current`} />
+          <div class="border-t-1 w-3/4 mx-auto border-current" />
           {region && summoner?.puuid && <Matches puuid={summoner.puuid} region={region} />}
         </div>
         <Footer />

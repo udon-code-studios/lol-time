@@ -1,15 +1,16 @@
 {
   "imports": {
-    "$fresh/": "https://deno.land/x/fresh@1.0.1/",
-    "preact": "https://esm.sh/preact@10.8.2",
-    "preact/": "https://esm.sh/preact@10.8.2/",
-    "preact-render-to-string": "https://esm.sh/preact-render-to-string@5.2.0?deps=preact@10.8.2",
-    "@twind": "./utils/twind.ts",
+    "$fresh/": "https://deno.land/x/fresh@1.1.1/",
+    "preact": "https://esm.sh/preact@10.11.0",
+    "preact/": "https://esm.sh/preact@10.11.0/",
+    "preact-render-to-string": "https://esm.sh/*preact-render-to-string@5.2.4",
     "twind": "https://esm.sh/twind@0.16.17",
     "twind/": "https://esm.sh/twind@0.16.17/",
     "riot": "https://deno.land/x/riot_api@v0.0.9-alpha/mod.ts",
     "riot/": "https://deno.land/x/riot_api@v0.0.9-alpha/",
-    "league": "https://deno.land/x/league_data@v0.2.0/mod.ts",
-    "league/": "https://deno.land/x/league_data@v0.2.0/"
+    "league": "https://deno.land/x/league_data@v0.2.3/mod.ts",
+    "league/": "https://deno.land/x/league_data@v0.2.3/",
+    "@preact/signals": "https://esm.sh/*@preact/signals@1.0.3",
+    "@preact/signals-core": "https://esm.sh/*@preact/signals-core@1.0.1"
   }
 }

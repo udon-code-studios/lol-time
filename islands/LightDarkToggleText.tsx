@@ -1,7 +1,4 @@
-/** @jsx h */
-import { h } from "preact";
 import { useEffect, useState } from "preact/hooks";
-import { tw } from "@twind";
 import * as icons from "../components/icons.tsx";
 
 export default function LightDarkToggle(props: { class?: string }) {
@@ -25,7 +22,7 @@ export default function LightDarkToggle(props: { class?: string }) {
   return (
     <button
       title="Toggle Dark Mode"
-      class={tw`focus:outline-none`}
+      class="focus:outline-none"
       onClick={() => {
         if (document.documentElement.classList.contains("dark")) {
           document.documentElement.classList.remove("dark");
