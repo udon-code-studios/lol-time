@@ -64,14 +64,14 @@ export default function Matches(props: { puuid: string; region: keyof typeof rio
       ))}
 
       {/* load more matches button */}
-      <div
+      <button
         class="w-min flex space-x-2 p-3 border-1 border-current"
         onClick={() =>
           fetchMatchIds(10)}
       >
         <p class="text-sm whitespace-nowrap">load more</p>
         <icons.PhCaretDoubleDownLight class="w-5" />
-      </div>
+      </button>
     </div>
   );
 }
