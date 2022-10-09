@@ -12,8 +12,7 @@ import * as $5 from "./routes/index.tsx";
 import * as $6 from "./routes/summoner.tsx";
 import * as $$0 from "./islands/LightDarkToggleIcon.tsx";
 import * as $$1 from "./islands/LightDarkToggleText.tsx";
-import * as $$2 from "./islands/Match.tsx";
-import * as $$3 from "./islands/Matches.tsx";
+import * as $$2 from "./islands/Matches.tsx";
 
 const manifest = {
   routes: {
@@ -28,8 +27,7 @@ const manifest = {
   islands: {
     "./islands/LightDarkToggleIcon.tsx": $$0,
     "./islands/LightDarkToggleText.tsx": $$1,
-    "./islands/Match.tsx": $$2,
-    "./islands/Matches.tsx": $$3,
+    "./islands/Matches.tsx": $$2,
   },
   baseUrl: import.meta.url,
   config,
