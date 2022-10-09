@@ -5,6 +5,8 @@ export const handler = async (_req: Request, _ctx: HandlerContext): Promise<Resp
   const url = new URL(_req.url);
   const puuid = url.searchParams.get("puuid");
   const region = url.searchParams.get("region") as keyof typeof riot.routes.Platform;
+  const count = parseInt(url.searchParams.get("count") || "5");
+  const startIndex = parseInt(url.searchParams.get("start") || "0");
 
   if (!puuid) {
     return new Promise((resolve) => {
@@ -19,7 +21,8 @@ export const handler = async (_req: Request, _ctx: HandlerContext): Promise<Resp
 
   const matches = await riot.match.byPuuid(puuid, {
     region: riot.routes.PlatformToRegional(riot.routes.Platform[region]),
-    count: 5,
+    count: count,
+    start: startIndex,
   });
 
   return new Promise((resolve) => {
