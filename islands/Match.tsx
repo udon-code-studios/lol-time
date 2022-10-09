@@ -2,42 +2,29 @@ import { useEffect, useState } from "preact/hooks";
 import * as riot from "riot";
 import * as assets from "league/assets/mod.ts";
 import * as queues from "league/data/queues.ts";
+import { formatDuration } from "../utils/funcs.ts";
 
-export default function Match(props: { puuid: string; matchId: string; region: keyof typeof riot.routes.Platform }) {
-  const [match, setMatch] = useState<{ status: string; match?: riot.MatchDTO }>();
-  const [player, setPlayer] = useState<riot.MatchDTO["info"]["participants"][0]>();
-  const [loadingState, setLoadingState] = useState<"loading" | "complete" | "failed">("loading");
-
-  useEffect(() => {
-    setLoadingState("loading");
-    fetch(`/api/match?id=${props.matchId}&region=${props.region}`).then((res) => {
-      res.json().then((data: { status: string; match?: riot.MatchDTO }) => {
-        setMatch(data);
-        setPlayer(data.match?.info.participants.find((participant) => {
-          return participant.puuid === props.puuid;
-        }));
-        setLoadingState("complete");
-      }).catch(() => {
-        setLoadingState("failed");
-      });
-    });
-  }, [props]);
+export default function Match(props: { match: riot.MatchDTO; player: riot.MatchDTO["info"]["participants"][0] }) {
+  const isWin = () => {
+    const playerTeam = props.match.info.teams.find((team) => team.teamId == props.player.teamId);
+    return (playerTeam) ? playerTeam?.win : false;
+  };
 
   const blueTeamParticipants = () => {
-    return (match?.match?.info.participants.filter((_participant, index) => {
+    return (props.match.info.participants.filter((_participant, index) => {
       return index < 5;
     }));
   };
 
   const redTeamParticipants = () => {
-    return (match?.match?.info.participants.filter((_participant, index) => {
+    return (props.match.info.participants.filter((_participant, index) => {
       return index >= 5;
     }));
   };
 
   const gameType = () => {
     // get queue type
-    const queueId = match?.match?.info.queueId;
+    const queueId = props.match.info.queueId;
     const queue = queues.info.find((queue) => queue.queueId == queueId);
 
     // filter display name
@@ -60,60 +47,48 @@ export default function Match(props: { puuid: string; matchId: string; region: k
         displayName = displayName?.replace("5v5 ", ""); // remove potential "5v5 " prefix
     }
 
-    return displayName;
+    return (displayName) ? displayName : "";
   };
-
-  if (loadingState === "loading") {
-    return (
-      <div class="w-full p-2 flex justify-center items-center gap-4 border-1 border-current text-center">
-        loading match...
-      </div>
-    );
-  }
-
-  if (loadingState === "failed") {
-    return (
-      <div class="w-full p-2 flex justify-center items-center gap-4 border-1 border-current text-center">
-        [ ERROR ] Failed to load matches.
-      </div>
-    );
-  }
 
   return (
     <div class="w-full p-2 flex justify-center items-center gap-4 border-1 border-current">
-      <div class="bg-blue-300 w-6 h-10" />
+      {isWin() ? <div class="bg-blue-300 w-6 h-12" /> : <div class="bg-red-300 w-6 h-12" />}
       <div class="flex flex-col items-center">
-        <p>{gameType()}</p>
-        <p>7/13 · 4:27</p>
-        <p>Victory</p>
+        <p class="text-sm font-bold">{gameType()}</p>
+        <p class="text-sm">{formatDuration(props.match.info.gameDuration)}</p>
+        <p class="text-sm">{isWin() ? "Victory" : "Defeat"}</p>
       </div>
       <div class="flex items-center gap-1">
-        <img src={assets.champion.icons.get(player!.championId)} class="w-16 rounded" />
+        <img src={assets.champion.icons.get(props.player.championId)} class="w-16 rounded" />
         <div class="flex flex-col items-center gap-1">
-          <img src={assets.summoner.icons.get(player!.summoner1Id)} class="w-7 rounded" />
-          <img src={assets.summoner.icons.get(player!.summoner2Id)} class="w-7 rounded" />
+          <img src={assets.summoner.icons.get(props.player.summoner1Id)} class="w-7 rounded" />
+          <img src={assets.summoner.icons.get(props.player.summoner2Id)} class="w-7 rounded" />
         </div>
       </div>
       <div class="flex flex-col items-center">
-        <p>{player?.kills} / {player?.deaths} / {player?.assists}</p>
-        <p>{player?.totalMinionsKilled} (0.0) CS</p>
+        <p class="font-bold">{props.player.kills} / {props.player.deaths} / {props.player.assists}</p>
+        <p class="text-sm">{props.player.totalMinionsKilled} (0.0) CS</p>
       </div>
-      <div class="w-20 overflow-hidden whitespace-nowrap flex flex-col items-start font-serif text-sm">
-        {blueTeamParticipants()?.map((participant) => {
+
+      {/* blue team participants */}
+      <div class="w-20 overflow-hidden whitespace-nowrap flex flex-col items-start font-serif text-sm -space-y-1">
+        {blueTeamParticipants().map((participant) => {
           return (
             <div class="flex items-center">
-              <img src={assets.champion.icons.get(participant.championId)} class="w-5" />
-              <p class="pl-1">{participant.summonerName}</p>
+              <img src={assets.champion.icons.get(participant.championId)} class="w-4" />
+              <p class="pl-1 text-sm">{participant.summonerName}</p>
             </div>
           );
         })}
       </div>
-      <div class="w-20 overflow-hidden whitespace-nowrap flex flex-col items-start font-serif text-sm">
-        {redTeamParticipants()?.map((participant) => {
+
+      {/* read team participants */}
+      <div class="w-24 overflow-hidden whitespace-nowrap flex flex-col items-start font-serif text-sm -space-y-1">
+        {redTeamParticipants().map((participant) => {
           return (
             <div class="flex items-center">
-              <img src={assets.champion.icons.get(participant.championId)} class="w-5" />
-              <p class="pl-1">{participant.summonerName}</p>
+              <img src={assets.champion.icons.get(participant.championId)} class="w-4" />
+              <p class="pl-1 text-sm">{participant.summonerName}</p>
             </div>
           );
         })}
