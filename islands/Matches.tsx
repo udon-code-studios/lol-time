@@ -24,7 +24,6 @@ export default function Matches(props: { puuid: string; region: keyof typeof rio
 
   /** fetch 'count' more matches replace newMatchIds */
   const fetchMatchIds = (count: number) => {
-    setLoadingState("loading");
     const startIndex = (matches?.length !== undefined) ? matches.length : 0;
     fetch(`/api/matches?puuid=${props.puuid}&region=${props.region}&count=${count}&start=${startIndex}`)
       .then((res) => {
@@ -60,10 +59,16 @@ export default function Matches(props: { puuid: string; region: keyof typeof rio
   return (
     <div class="w-full flex flex-col justify-center items-center gap-4">
       {/* matches */}
-      {matches.map((match) => <Match match={match.match} player={match.player} region={props.region} />)}
+      {matches.map((match, index) => (
+        <Match key={index} match={match.match} player={match.player} region={props.region} />
+      ))}
 
       {/* load more matches button */}
-      <div class="w-min flex space-x-2 p-3 border-1 border-current" onClick={() => fetchMatchIds(10)}>
+      <div
+        class="w-min flex space-x-2 p-3 border-1 border-current"
+        onClick={() =>
+          fetchMatchIds(10)}
+      >
         <p class="text-sm whitespace-nowrap">load more</p>
         <icons.PhCaretDoubleDownLight class="w-5" />
       </div>
