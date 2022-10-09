@@ -95,3 +95,15 @@ export function PhMagnifyingGlassBold(props: IconProps) {
     </svg>
   );
 }
+
+export function PhCaretDoubleDownLight(props: IconProps) {
+  return (
+    <svg viewBox="0 0 256 256" {...props}>
+      <path
+        fill="currentColor"
+        d="M212.2 123.8a5.8 5.8 0 0 1 0 8.4l-80 80a5.8 5.8 0 0 1-8.4 0l-80-80a5.9 5.9 0 0 1 8.4-8.4l75.8 75.7l75.8-75.7a5.8 5.8 0 0 1 8.4 0Zm-88.4 8.4a5.8 5.8 0 0 0 8.4 0l80-80a5.9 5.9 0 0 0-8.4-8.4L128 119.5L52.2 43.8a5.9 5.9 0 0 0-8.4 8.4Z"
+      >
+      </path>
+    </svg>
+  );
+}
