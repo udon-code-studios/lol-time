@@ -60,7 +60,7 @@ export default function Matches(props: { puuid: string; region: keyof typeof rio
   return (
     <div class="w-full flex flex-col justify-center items-center gap-4">
       {/* matches */}
-      {matches.map((match) => <Match match={match.match} player={match.player} />)}
+      {matches.map((match) => <Match match={match.match} player={match.player} region={props.region} />)}
 
       {/* load more matches button */}
       <div class="w-min flex space-x-2 p-3 border-1 border-current" onClick={() => fetchMatchIds(10)}>

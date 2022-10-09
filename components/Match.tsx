@@ -4,22 +4,16 @@ import * as assets from "league/assets/mod.ts";
 import * as queues from "league/data/queues.ts";
 import { formatDuration } from "../utils/funcs.ts";
 
-export default function Match(props: { match: riot.MatchDTO; player: riot.MatchDTO["info"]["participants"][0] }) {
+export default function Match(
+  props: {
+    match: riot.MatchDTO;
+    player: riot.MatchDTO["info"]["participants"][0];
+    region: keyof typeof riot.routes.Platform;
+  },
+) {
   const isWin = () => {
     const playerTeam = props.match.info.teams.find((team) => team.teamId == props.player.teamId);
     return (playerTeam) ? playerTeam?.win : false;
-  };
-
-  const blueTeamParticipants = () => {
-    return (props.match.info.participants.filter((_participant, index) => {
-      return index < 5;
-    }));
-  };
-
-  const redTeamParticipants = () => {
-    return (props.match.info.participants.filter((_participant, index) => {
-      return index >= 5;
-    }));
   };
 
   const gameType = () => {
@@ -50,6 +44,24 @@ export default function Match(props: { match: riot.MatchDTO; player: riot.MatchD
     return (displayName) ? displayName : "";
   };
 
+  const csPerMinute = () => {
+    const minutes = props.match.info.gameDuration / 60;
+    console.log(minutes);
+    return (props.player.totalMinionsKilled / minutes).toFixed(1);
+  };
+
+  const blueTeamParticipants = () => {
+    return (props.match.info.participants.filter((_participant, index) => {
+      return index < 5;
+    }));
+  };
+
+  const redTeamParticipants = () => {
+    return (props.match.info.participants.filter((_participant, index) => {
+      return index >= 5;
+    }));
+  };
+
   return (
     <div class="w-full p-2 flex justify-center items-center gap-4 border-1 border-current">
       {isWin() ? <div class="bg-blue-300 w-6 h-12" /> : <div class="bg-red-300 w-6 h-12" />}
@@ -67,7 +79,9 @@ export default function Match(props: { match: riot.MatchDTO; player: riot.MatchD
       </div>
       <div class="flex flex-col items-center">
         <p class="font-bold">{props.player.kills} / {props.player.deaths} / {props.player.assists}</p>
-        <p class="text-sm">{props.player.totalMinionsKilled} (0.0) CS</p>
+        <p class="text-sm">
+          {props.player.totalMinionsKilled}cs ( <strong>{csPerMinute()}</strong> )
+        </p>
       </div>
 
       {/* blue team participants */}
@@ -76,7 +90,9 @@ export default function Match(props: { match: riot.MatchDTO; player: riot.MatchD
           return (
             <div class="flex items-center">
               <img src={assets.champion.icons.get(participant.championId)} class="w-4" />
-              <p class="pl-1 text-sm">{participant.summonerName}</p>
+              <a href={`/summoner?name=${participant.summonerName}&region=${props.region}`}>
+                <p class="pl-1 text-sm hover:underline">{participant.summonerName}</p>
+              </a>
             </div>
           );
         })}
@@ -88,7 +104,9 @@ export default function Match(props: { match: riot.MatchDTO; player: riot.MatchD
           return (
             <div class="flex items-center">
               <img src={assets.champion.icons.get(participant.championId)} class="w-4" />
-              <p class="pl-1 text-sm">{participant.summonerName}</p>
+              <a href={`/summoner?name=${participant.summonerName}&region=${props.region}`}>
+                <p class="pl-1 text-sm hover:underline">{participant.summonerName}</p>
+              </a>
             </div>
           );
         })}
